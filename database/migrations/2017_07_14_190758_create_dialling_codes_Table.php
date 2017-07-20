@@ -15,8 +15,8 @@ class CreateDiallingCodesTable extends Migration
     {
         Schema::create('dialling_codes', function (Blueprint $table) {
             $table->increments('id');
-            
-            $table->timestamps();
+            $table->string('name');
+            $table->string('dialling_code');
         });
     }
 

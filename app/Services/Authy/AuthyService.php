@@ -14,7 +14,6 @@ use App\Services\Authy\Exceptions\SmsRequestFailedException;
 
 class AuthyService
 {
-
     private $client;
 
     public function __construct(AuthyApi $client)
@@ -22,15 +21,16 @@ class AuthyService
         $this->client = $client;
     }
 
-    public function registerUSer(User $user)
+    public function registerUser(User $user)
     {
-        $user = $this->client->rgisterUser(
+        $user = $this->client->registerUser(
             $user->email,
-            $this->phoneNumber->phone_number,
-            $this->phoneNumber->diallingCode->dialing_code
+            $user->phoneNumber->phone_number,
+            $user->phoneNumber->diallingCode->dialling_code
         );
+
         if (!$user->ok()) {
-          throw new RegistrationFailedException;
+            throw new RegistrationFailedException;
         }
 
         return $user->id();
@@ -46,6 +46,7 @@ class AuthyService
         } catch (AuthyFormatException $e) {
             throw new InvalidTokenException;
         }
+
         if (!$verification->ok()) {
             throw new InvalidTokenException;
         }
@@ -58,10 +59,10 @@ class AuthyService
         $request = $this->client->requestSms($user->authy_id, [
             'force' => true,
         ]);
+
         if (!$request->ok()) {
             throw new SmsRequestFailedException;
         }
-
     }
-
 }
+
